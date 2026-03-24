@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-// Definisi warna khusus untuk myBCA
 const Color bcaBlue = Color(0xFF0066AE); 
-const Color bcaTextBlue = Color(0xFF004481); // Biru tua untuk teks nama & saldo
-const Color bcaCyan = Color(0xFF00A2E9); // Biru muda cyan untuk nomor rekening
+const Color bcaTextBlue = Color(0xFF004481); 
+const Color bcaCyan = Color(0xFF00A2E9); 
 
 void main() {
   runApp(const MyApp());
@@ -38,7 +37,6 @@ class MyBcaScreen extends StatelessWidget {
         child: Column(
           children: [
             _buildTopHeader(),
-            
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -49,17 +47,17 @@ class MyBcaScreen extends StatelessWidget {
                     topRight: Radius.circular(20),
                   ),
                 ),
-                // Menggunakan SingleChildScrollView agar layarnya bisa di-scroll ke bawah
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Memanggil widget Profil
                       _buildProfileSection(),
                       const SizedBox(height: 25),
-                      // Memanggil widget Kartu Saldo
                       _buildBalanceCard(),
+                      const SizedBox(height: 35),
+                      // Memanggil widget Menu Utama
+                      _buildMainMenu(),
                     ],
                   ),
                 ),
@@ -71,7 +69,6 @@ class MyBcaScreen extends StatelessWidget {
     );
   }
 
-  // Header Atas (Logo & Ikon Kanan)
   Widget _buildTopHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -98,9 +95,6 @@ class MyBcaScreen extends StatelessWidget {
     );
   }
 
-  // --- WIDGET BARU TAHAP 2 ---
-
-  // Bagian Teks Sapaan & Nama
   Widget _buildProfileSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,22 +114,17 @@ class MyBcaScreen extends StatelessWidget {
     );
   }
 
-  // Bagian Kartu Saldo Utama
   Widget _buildBalanceCard() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        // Menambahkan border tipis & shadow sesuai desain asli
         border: Border.all(color: Colors.grey[200]!, width: 1.5),
-        boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4)),
-        ],
+        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Isi Bagian Atas Kartu (Rekening & Saldo)
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -166,15 +155,13 @@ class MyBcaScreen extends StatelessWidget {
               ],
             ),
           ),
-          
-          // Bagian Bawah Kartu (Banner Gradient Gebyar Hadiah)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13)),
               gradient: LinearGradient(
-                colors: [Color(0xFF004481), Color(0xFF3b5998)], // Gradasi biru
+                colors: [Color(0xFF004481), Color(0xFF3b5998)],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
               ),
@@ -197,6 +184,86 @@ class MyBcaScreen extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- WIDGET BARU TAHAP 3 ---
+
+  // Bagian Menu Utama
+  Widget _buildMainMenu() {
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildMenuIcon(Icons.swap_horiz, 'Transfer', bcaBlue),
+            _buildMenuIcon(Icons.show_chart, 'Welma', Colors.teal),
+            _buildMenuIcon(Icons.health_and_safety, 'Proteksi', Colors.teal[300]!),
+            _buildMenuIcon(Icons.shopping_bag, 'Lifestyle', bcaBlue, isNew: true),
+          ],
+        ),
+        const SizedBox(height: 30),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildMenuIcon(Icons.history_toggle_off, 'Paylater', Colors.orange),
+            _buildMenuIcon(Icons.credit_card, 'Flazz', const Color(0xFF004481)),
+            _buildMenuIcon(Icons.phone_android, 'Cardless', bcaBlue),
+            _buildMenuIcon(Icons.more_horiz, 'Lainnya', Colors.grey[400]!),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Template Ikon Menu myBCA
+  Widget _buildMenuIcon(IconData icon, String label, Color iconColor, {bool isNew = false}) {
+    return SizedBox(
+      width: 70,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Ikon utama
+              Icon(icon, color: iconColor, size: 38),
+              
+              // Jika ada badge "NEW" seperti di Lifestyle
+              if (isNew)
+                Positioned(
+                  bottom: -5,
+                  right: -10,
+                  left: -10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text(
+                      'NEW',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 13, 
+              fontWeight: FontWeight.w500,
+              color: bcaTextBlue, // Teks menu myBCA menggunakan biru tua
             ),
           ),
         ],
